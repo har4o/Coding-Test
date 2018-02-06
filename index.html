@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="content-language" content="en" />
+<meta http-equiv="Content-Type" content="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<link href="main.css" media="all" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  
+<script src="jquery-2.1.1.js"></script>
+<script>
+    $(function(){
+
+       var tableHead = "<th>Date</th>"; //pref
+        //ix date label
+        var tableRow = "";
+        var count = 0;
+        window.total = [];
+        
+        //Date formatter.
+        function formatDate(date){
+            //set array of months and split() to separate date into array 
+            var monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+            var str = date;
+            var dd = str.split('-'); //split date at '-' into array of year and month as a string.
+            var setMonthIndex = dd[1] - 1;  // since array always start from 0, set each index to -1 to display correct monthName
+            var m = monthNames[setMonthIndex] +' '+ dd[0]; // get the formatted date as required.
+            
+            return m; // return the exact formatted date;
+        }
+   
+        $.getJSON('data.json', function (data) {
+          
+              $.map(data, function( val, i ) {
+                  count++;
+                  
+                  
+                  // display headers
+                  tableRow += "<tr><td>"+formatDate(i)+"</td>";  //loop and call invoke function and pass the i ==> date value
+                  
+                      for(key in val) {
+                        var value = val[key];
+                        var numHeader = count;
+                          
+                          if(count === 1){                              
+                               tableHead += "<th>"+ key +"</th>";
+                            }
+                        
+                            tableRow += '<td class="'+key+'">'+ value +'</td>';
+                            
+                        }
+                  
+                   tableRow += "</tr>";
+
+                });
+           
+
+    
+            $('<table class="datatable"><thead class="header"></thead><tbody class="data-row"></tbody></table>').appendTo('body');
+            $(".header").append($("<tr>"+tableHead+"</tr>"));  
+            $('.data-row').append($("<tr>"+tableRow+"</tr>"));
+        });
+                  
+    });
+</script>
+</body>
+</html>
